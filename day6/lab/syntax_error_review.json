@@ -1,0 +1,27 @@
+{
+  "file": "queries/syntax_error.sql",
+  "reviewed_at": "2026-05-25T17:32:34.449216",
+  "issues_found": 2,
+  "review": {
+    "issues": [
+      {
+        "severity": "Critical",
+        "category": "Correctness",
+        "title": "Incorrect table name",
+        "line": "1",
+        "problem": "The table name 'employees' does not exist in the schema.",
+        "fix": "SELECT * FROM sigma_analytics.fact_transactions;"
+      },
+      {
+        "severity": "Low",
+        "category": "Readability",
+        "title": "Use of SELECT *",
+        "line": "1",
+        "problem": "Using SELECT * can lead to performance issues and makes it unclear which columns are being used.",
+        "fix": "SELECT transaction_id, amount, status, merchant_id, customer_id, transaction_date, payment_method FROM sigma_analytics.fact_transactions;"
+      }
+    ],
+    "corrected_sql": "SELECT transaction_id, amount, status, merchant_id, customer_id, transaction_date, payment_method FROM sigma_analytics.fact_transactions;",
+    "summary": "The query has a critical correctness issue due to an incorrect table name and a readability issue with the use of SELECT *."
+  }
+}

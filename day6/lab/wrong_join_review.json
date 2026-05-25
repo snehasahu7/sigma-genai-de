@@ -1,0 +1,43 @@
+{
+  "file": "queries/wrong_join.sql",
+  "reviewed_at": "2026-05-25T17:32:43.341197",
+  "issues_found": 4,
+  "review": {
+    "issues": [
+      {
+        "severity": "Critical",
+        "category": "Correctness",
+        "title": "Incorrect table reference",
+        "line": "1",
+        "problem": "The query references tables 'employees' and 'departments' which are not part of the provided schema.",
+        "fix": "SELECT m.merchant_name, t.amount\nFROM sigma_analytics.fact_transactions t\nJOIN sigma_analytics.dim_merchant m ON t.merchant_id = m.merchant_id\nWHERE t.status = 'COMPLETED';"
+      },
+      {
+        "severity": "Critical",
+        "category": "Correctness",
+        "title": "Missing filter for revenue calculation",
+        "line": "N/A",
+        "problem": "The query does not filter transactions by status 'COMPLETED' to calculate revenue.",
+        "fix": "WHERE t.status = 'COMPLETED'"
+      },
+      {
+        "severity": "Critical",
+        "category": "Correctness",
+        "title": "Missing calculation for failure rate",
+        "line": "N/A",
+        "problem": "The query does not calculate the failure rate as per the business rules.",
+        "fix": "(SELECT COUNT(*) FILTER (WHERE t.status = 'FAILED') * 100.0 / COUNT(*) AS failure_rate\nFROM sigma_analytics.fact_transactions t)"
+      },
+      {
+        "severity": "Medium",
+        "category": "Readability",
+        "title": "Lack of comments",
+        "line": "N/A",
+        "problem": "The query lacks comments explaining the logic, especially for complex calculations.",
+        "fix": "-- Calculate total revenue from completed transactions\nSELECT SUM(t.amount) AS revenue\nFROM sigma_analytics.fact_transactions t\nWHERE t.status = 'COMPLETED';\n\n-- Calculate failure rate\nSELECT (SELECT COUNT(*) FILTER (WHERE t.status = 'FAILED') * 100.0 / COUNT(*)\nFROM sigma_analytics.fact_transactions t) AS failure_rate;"
+      }
+    ],
+    "corrected_sql": "-- Calculate total revenue from completed transactions\nSELECT SUM(t.amount) AS revenue\nFROM sigma_analytics.fact_transactions t\nWHERE t.status = 'COMPLETED';\n\n-- Calculate failure rate\nSELECT (SELECT COUNT(*) FILTER (WHERE t.status = 'FAILED') * 100.0 / COUNT(*)\nFROM sigma_analytics.fact_transactions t) AS failure_rate;",
+    "summary": "The query contained critical correctness issues by referencing non-existent tables and missing necessary filters. Readability was also lacking due to the absence of comments."
+  }
+}

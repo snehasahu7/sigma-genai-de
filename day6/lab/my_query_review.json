@@ -1,0 +1,43 @@
+{
+  "file": "queries/my_query.sql",
+  "reviewed_at": "2026-05-25T17:32:30.574132",
+  "issues_found": 4,
+  "review": {
+    "issues": [
+      {
+        "severity": "Critical",
+        "category": "Correctness",
+        "title": "Invalid table reference",
+        "line": "SELECT clause",
+        "problem": "The query references a table 'employees' which does not exist in the provided schema.",
+        "fix": "SELECT merchant_name, transaction_date"
+      },
+      {
+        "severity": "Critical",
+        "category": "Correctness",
+        "title": "Missing condition in WHERE clause",
+        "line": "WHERE clause",
+        "problem": "The WHERE clause is empty, which will result in a syntax error.",
+        "fix": "WHERE status = 'COMPLETED'"
+      },
+      {
+        "severity": "Medium",
+        "category": "Readability",
+        "title": "Ambiguous column reference",
+        "line": "SELECT clause",
+        "problem": "The column 'name' is ambiguous as it is not clear which table it belongs to.",
+        "fix": "SELECT dm.merchant_name, ft.transaction_date"
+      },
+      {
+        "severity": "Medium",
+        "category": "Readability",
+        "title": "Lack of comments",
+        "line": "Entire query",
+        "problem": "The query lacks comments explaining the logic or purpose.",
+        "fix": "-- Query to get merchant names and transaction dates for completed transactions"
+      }
+    ],
+    "corrected_sql": "SELECT dm.merchant_name, ft.transaction_date FROM sigma_analytics.fact_transactions ft JOIN sigma_analytics.dim_merchant dm ON ft.merchant_id = dm.merchant_id WHERE ft.status = 'COMPLETED'",
+    "summary": "The query had critical correctness issues due to invalid table references and missing conditions. Readability was also improved by specifying table aliases and adding comments."
+  }
+}

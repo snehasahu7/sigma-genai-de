@@ -1,0 +1,2 @@
+SELECT * 
+FORM employees;

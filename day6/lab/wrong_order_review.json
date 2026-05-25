@@ -1,0 +1,51 @@
+{
+  "file": "queries/wrong_order.sql",
+  "reviewed_at": "2026-05-25T17:32:51.743800",
+  "issues_found": 5,
+  "review": {
+    "issues": [
+      {
+        "severity": "Critical",
+        "category": "Correctness",
+        "title": "Incorrect table reference",
+        "line": "line 1",
+        "problem": "The query references a table 'employees' which does not exist in the provided schema.",
+        "fix": "Replace 'employees' with 'sigma_analytics.fact_transactions'."
+      },
+      {
+        "severity": "Critical",
+        "category": "Correctness",
+        "title": "Missing filter for status",
+        "line": "line 1",
+        "problem": "The query does not filter transactions by status, which is necessary to calculate revenue correctly.",
+        "fix": "Add a WHERE clause to filter by status = 'COMPLETED'."
+      },
+      {
+        "severity": "Medium",
+        "category": "Correctness",
+        "title": "Incorrect aggregation",
+        "line": "line 1",
+        "problem": "The query is counting all records without considering the transaction status, which is incorrect for calculating failure rate.",
+        "fix": "Use a CASE statement to count COMPLETED, FAILED, and PENDING transactions separately."
+      },
+      {
+        "severity": "Medium",
+        "category": "Readability",
+        "title": "ORDER BY before GROUP BY",
+        "line": "line 3",
+        "problem": "The ORDER BY clause is placed before the GROUP BY clause, which is not standard and can lead to confusion.",
+        "fix": "Move the ORDER BY clause after the GROUP BY clause."
+      },
+      {
+        "severity": "Medium",
+        "category": "Readability",
+        "title": "Lack of comments",
+        "line": "line 1",
+        "problem": "The query lacks comments explaining the purpose and logic, making it difficult to understand.",
+        "fix": "Add comments to explain the purpose and logic of the query."
+      }
+    ],
+    "corrected_sql": "SELECT m.merchant_name, COUNT(*) AS transaction_count\nFROM sigma_analytics.fact_transactions t\nJOIN sigma_analytics.dim_merchant m ON t.merchant_id = m.merchant_id\nWHERE t.status = 'COMPLETED'\nGROUP BY m.merchant_name\nHAVING COUNT(*) > 5\nORDER BY COUNT(*) DESC;",
+    "summary": "The query had critical correctness issues due to referencing the wrong table and missing necessary filters. It also had readability issues with ORDER BY placement and lack of comments."
+  }
+}
