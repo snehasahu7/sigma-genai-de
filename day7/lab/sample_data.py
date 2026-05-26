@@ -120,6 +120,7 @@ SCHEMA_BRONZE = {
     "ingestion_timestamp": "string",
     "source_file":         "string",
     "pipeline_run_id":     "string",
+    
 }
 
 SCHEMA_SILVER = {
