@@ -6,6 +6,7 @@ venv/
 env/
 .env
 .env.local
+venv/
 
 # API Keys and Credentials — NEVER COMMIT
 *secret*
@@ -35,8 +36,6 @@ desktop.ini
 ~$*
 
 # Student lab outputs — never commit trainer runs
-agent_outputs/
-output/
 
 # Temporary
 *.tmp
